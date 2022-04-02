@@ -44,10 +44,14 @@
             </tbody>
         </table>
 
-        <button type="button" th:href="@{/book/create}" style="width: 100px; margin-left: 1030px"
+        <button type="button" th:href="@{/book/create}" style="width: 100px; margin-left: 1030px; margin-bottom: 10px"
                 class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
             ➕
         </button>
+
+
+        <a style="width: 100px; margin-left: 1030px" th:href="@{/book/download}"
+           class="btn btn-success">Download </a>
         <!-- Book create  -->
         <div class="modals">
             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"

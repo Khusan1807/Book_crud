@@ -1,6 +1,10 @@
 package uz.pdp.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -8,8 +12,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import uz.pdp.dto.BookCreateDto;
+import uz.pdp.dto.BookDto;
 import uz.pdp.dto.BookUpdateDto;
 import uz.pdp.service.BookService;
+import uz.pdp.service.GeneratePdfService;
+
+import java.io.ByteArrayInputStream;
+import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Controller
@@ -73,6 +83,25 @@ public class BookController  {
     }
 
 
+    @RequestMapping(value = "/download", method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<InputStreamResource> citiesReport() {
+
+        List<BookDto> books = service.getAll();
+
+        ByteArrayInputStream bis = GeneratePdfService.booksReport(books);
+
+        var headers = new HttpHeaders();
+        String now = LocalDateTime.now().toString();
+        String filename=now+".pdf";
+        headers.add("Content-Disposition", "inline; filename="+filename);
+
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(new InputStreamResource(bis));
+    }
 
 
 
